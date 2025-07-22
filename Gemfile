@@ -41,6 +41,8 @@ gem "responders"
 
 gem "devise"
 
+gem "devise-jwt"
+
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
   gem "debug", platforms: %i[ mri windows ], require: "debug/prelude"
@@ -55,7 +57,7 @@ group :development, :test do
   gem "annotate"
 
   # RSpec for Rails 5+
-  gem "rspec-rails", '~> 5.0.0'
+  gem "rspec-rails", "~> 5.0.0"
 
   # A library for setting up Ruby objects as test data.
   gem "factory_bot_rails"
