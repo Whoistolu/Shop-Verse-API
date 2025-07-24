@@ -1,5 +1,6 @@
 class ApplicationController < ActionController::API
-    include Pundit
+    include Devise::Controllers::Helpers
+    include Pundit::Authorization
 
     before_action :authenticate_user!
 
