@@ -1,5 +1,6 @@
 class Api::V1::Users::RegistrationsController < Devise::RegistrationsController
     respond_to :json
+    skip_before_action :authenticate_user!, only: [:create]
 
     def create
         build_resource(sign_up_params)
