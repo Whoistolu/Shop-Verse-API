@@ -9,6 +9,6 @@
 #   end
 
 UserRole.create(name: "super_admin", description: "Super Admin with all permissions")
-UserRole.create(name: "admin", description: "Brand owner")
+UserRole.create(name: "brand_owner", description: "Brand owner")
 UserRole.create(name: "customer", description: "Standard Customer")
 UserRole.create(name: "guest", description: "Guest User with limited access")
