@@ -1,11 +1,23 @@
 Rails.application.routes.draw do
-  devise_for :users
-  # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
+  namespace :api do
+    namespace :v1 do
+      # Only sessions here for Devise
+      devise_for :users,
+        path: "auth",
+        controllers: {
+          sessions: "api/v1/users/sessions"
+        },
+        defaults: { format: :json }
 
-  # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.
-  # Can be used by load balancers and uptime monitors to verify that the app is live.
+      # Custom registration routes
+      post "auth/brand_signup", to: "users/custom_registrations#brand_signup"
+      post "auth/customer_signup", to: "users/custom_registrations#customer_signup"
+
+      # ✅ Custom login routes
+      post "auth/brand_login", to: "users/custom_sessions#brand_login"
+      post "auth/customer_login", to: "users/custom_sessions#customer_login"
+    end
+  end
+
   get "up" => "rails/health#show", as: :rails_health_check
-
-  # Defines the root path route ("/")
-  # root "posts#index"
 end

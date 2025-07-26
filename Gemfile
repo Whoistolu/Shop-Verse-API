@@ -41,9 +41,11 @@ gem "responders"
 
 gem "devise"
 
-gem "devise-jwt"
 
 gem "pundit"
+
+gem "devise-jwt", github: "waiting-for-dev/devise-jwt"
+
 
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
