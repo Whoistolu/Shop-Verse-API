@@ -1,7 +1,7 @@
 roles = [
   { name: "super_admin", description: "Super Admin with all permissions" },
   { name: "brand_owner", description: "Brand owner" },
-  { name: "customer", description: "Standard Customer" },
+  { name: "customer", description: "Standard Customer" }
 ]
 
 roles.each do |role|
