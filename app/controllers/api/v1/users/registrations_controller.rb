@@ -19,11 +19,9 @@ class Api::V1::Users::RegistrationsController < Devise::RegistrationsController
     def account_update_params
         params.require(:user).permit(:email, :password, :password_confirmation, :current_password, :first_name, :last_name, :user_role_id)
     end
-    
+
 
      def handle_signup(role_name, success_message)
-      
-
         user_role = UserRole.find_by(name: role_name)
 
         unless user_role
