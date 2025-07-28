@@ -68,4 +68,6 @@ group :development, :test do
 
   # A Ruby gem to load environment variables from `.env`.
   gem "dotenv-rails"
+
+  gem "letter_opener"
 end
