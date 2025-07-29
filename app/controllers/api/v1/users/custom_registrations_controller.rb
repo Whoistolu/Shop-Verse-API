@@ -27,6 +27,8 @@ class Api::V1::Users::CustomRegistrationsController < ApplicationController
     user = User.new(sign_up_params.merge(user_role_id: user_role.id))
 
     if user.save
+      UserMailer.welcome_email(@user).deliver_later
+
       token = Warden::JWTAuth::UserEncoder.new.call(user, :user, nil).first
 
       render json: {
