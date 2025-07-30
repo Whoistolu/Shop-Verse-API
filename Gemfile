@@ -61,13 +61,18 @@ group :development, :test do
   gem "annotate"
 
   # RSpec for Rails 5+
-  gem "rspec-rails", "~> 5.0.0"
+  gem "rspec-rails", "7.0.1"
 
   # A library for setting up Ruby objects as test data.
   gem "factory_bot_rails"
 
   # A Ruby gem to load environment variables from `.env`.
   gem "dotenv-rails"
+end
 
+group :development do
+  # Speed up commands on slow machines / big apps [https://github.com/rails/spring]
+  # gem "spring"
+  # Preview mail in the browser instead of sending.
   gem "letter_opener"
 end
