@@ -1,18 +1,13 @@
 class OtpGenerator
-    OTP_EXPIRATION_TIME = 10.minutes
+  OTP_LENGTH = 6
+  OTP_EXPIRY = 10.minutes
 
-    def def initialize(user)
-        @user = user
-    end
-
-    def generate
-        otp = rand(100_000..999_999).to_s
-
-        @user.update!(
-        otp_code: otp,
-        otp_generated_at: Time.current
-        )
-
-        otp
-    end
+  def self.generate_for(user)
+    code = rand.to_s[2..(1 + OTP_LENGTH)]
+    user.update!(
+      otp_code: code,
+      otp_generated_at: Time.current
+    )
+    code
+  end
 end
