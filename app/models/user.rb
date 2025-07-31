@@ -7,6 +7,7 @@ class User < ApplicationRecord
          jwt_revocation_strategy: Devise::JWT::RevocationStrategies::Null
 
   belongs_to :user_role
+  has_many :otps, dependent: :destroy
 
   validates :email, :first_name, :last_name, presence: true
 end
