@@ -29,13 +29,13 @@ class Api::V1::Users::CustomRegistrationsController < ApplicationController
     if user.save
         if role_name == "customer"
             otp = OtpGenerator.generate_for(user)
-            OtpMailer.send_otp(otp, user).deliver_later
+            OtpMailer.send_otp(user, otp).deliver_now
         elsif role_name == "brand_owner"
             RegistrationMailer.pending_approval(user).deliver_later
         end
 
 
-      UserMailer.welcome_email(@user).deliver_later
+      UserMailer.welcome_email(user).deliver_later
 
       token = Warden::JWTAuth::UserEncoder.new.call(user, :user, nil).first
 
