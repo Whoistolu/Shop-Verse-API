@@ -13,7 +13,6 @@ Rails.application.routes.draw do
       post "auth/brand_signup", to: "users/custom_registrations#brand_signup"
       post "auth/customer_signup", to: "users/custom_registrations#customer_signup"
 
-      # ✅ Custom login routes
       post "auth/brand_login", to: "users/custom_sessions#brand_login"
       post "auth/customer_login", to: "users/custom_sessions#customer_login"
     end
