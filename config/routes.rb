@@ -1,7 +1,7 @@
 Rails.application.routes.draw do
   namespace :api do
     namespace :v1 do
-      # Only sessions here for Devise
+
       devise_for :users,
         path: "auth",
         controllers: {
@@ -9,12 +9,13 @@ Rails.application.routes.draw do
         },
         defaults: { format: :json }
 
-      # Custom registration routes
       post "auth/brand_signup", to: "users/custom_registrations#brand_signup"
       post "auth/customer_signup", to: "users/custom_registrations#customer_signup"
 
       post "auth/brand_login", to: "users/custom_sessions#brand_login"
       post "auth/customer_login", to: "users/custom_sessions#customer_login"
+
+      post "auth/verify_otp", to: "users/otp_verification#verify_otp"
     end
   end
 
