@@ -26,6 +26,17 @@ class Api::V1::Users::OtpVerificationController < ApplicationController
             return render json: { error: "OTP has expired" }, status: :unauthorized
         end
 
+
+        case user.user_role.name
+        when "customer"
+            user.update(status: User.statuses[:registered])
+        when "brand_owner"
+            user.update(status: User.statuses[:approved])
+        else
+            render json: { error: "Unsupported user role" }, status: :unprocessable_entity
+            return
+        end
+
         token = Warden::JWTAuth::UserEncoder.new.call(user, :user, nil).first
 
 
