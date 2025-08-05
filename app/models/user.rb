@@ -12,13 +12,13 @@ class User < ApplicationRecord
   validates :email, :first_name, :last_name, presence: true
 
   enum status: {
-    pending_registration: 0,
-    registered: 1,
-    suspended: 2,
-    awaiting_approval: 3,
-    approved: 4,
-    rejected: 5
-  }
+    pending_registration: "pending_registration",
+    registered: "registered",
+    suspended: "suspended",
+    awaiting_approval: "awaiting_approval",
+    approved: "approved",
+    rejected: "rejected"
+  }, _suffix: true 
 
   validates :status, presence: true
 
