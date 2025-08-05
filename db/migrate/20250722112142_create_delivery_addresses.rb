@@ -1,4 +1,4 @@
-class CreateDeliveryAddresses < ActiveRecord::Migration[8.0]
+class CreateDeliveryAddresses < ActiveRecord::Migration[7.1]
   def change
     create_table :delivery_addresses do |t|
       t.string :phone_number

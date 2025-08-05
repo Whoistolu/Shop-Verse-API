@@ -1,4 +1,4 @@
-class ChangeUserStatusToString < ActiveRecord::Migration[8.0]
+class ChangeUserStatusToString < ActiveRecord::Migration[7.1]
   def up
     change_column :users, :status, :string
   end

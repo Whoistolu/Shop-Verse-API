@@ -1,4 +1,4 @@
-class RemoveNameFromCustomers < ActiveRecord::Migration[8.0]
+class RemoveNameFromCustomers < ActiveRecord::Migration[7.1]
   def change
     remove_column :customers, :name, :string
   end
