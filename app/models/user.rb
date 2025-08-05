@@ -12,13 +12,13 @@ class User < ApplicationRecord
   validates :email, :first_name, :last_name, presence: true
 
   enum status: {
-    pending_registration: "pending_registration",
-    registered: "registered",
-    suspended: "suspended",
-    awaiting_approval: "awaiting_approval",
-    approved: "approved",
-    rejected: "rejected"
-  }, _suffix: true 
+    pending_registration: 0,
+    registered: 1,
+    suspended: 2,
+    awaiting_approval: 3,
+    approved: 4,
+    rejected: 5
+  }
 
   validates :status, presence: true
 
@@ -33,4 +33,18 @@ class User < ApplicationRecord
   # def customer?
   #  user_role.name == "customer"
   # end
+  before_validation :set_default_status, on: :create
+
+  private
+
+  def set_default_status
+    return if status.present? || user_role.nil?
+
+    case user_role.name
+    when "customer"
+      self.status = "pending_registration"
+    when "brand_owner"
+      self.status = "awaiting_approval"
+    end
+  end
 end
