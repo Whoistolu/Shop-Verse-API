@@ -27,6 +27,7 @@ class Api::V1::Users::OtpVerificationController < ApplicationController
         end
 
 
+
         case user.user_role.name
         when "customer"
             user.update(status: User.statuses[:registered])
