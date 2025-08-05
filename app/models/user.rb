@@ -10,4 +10,27 @@ class User < ApplicationRecord
   has_many :otps, dependent: :destroy
 
   validates :email, :first_name, :last_name, presence: true
+
+  enum status: {
+    pending_registration: 0,
+    registered: 1,
+    suspended: 2,
+    awaiting_approval: 3,
+    approved: 4,
+    rejected: 5
+  }
+
+  validates :status, presence: true
+
+  # def super_admin?
+  #   user_role.name == "super_admin"
+  # end
+
+  # def brand_owner?
+  #   user_role.name == "brand_owner"
+  # end
+
+  # def customer?
+  #  user_role.name == "customer"
+  # end
 end
