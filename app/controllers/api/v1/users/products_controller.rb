@@ -1,4 +1,5 @@
 class Api::V1::ProductController < ApplicationController
+    before_action :authenticate_user!
     before_action :ensure_brand_owner, only: [ :create, :index ]
 
     def index
