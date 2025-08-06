@@ -2,7 +2,6 @@ class Api::V1::Users::OtpVerificationController < ApplicationController
     skip_before_action :authenticate_user!, only: [ :verify_otp ]
 
     def verify_otp
-
        user = User.includes(:user_role).find_by(email: params[:email])
 
         if user.nil? || user.user_role.name != "customer"

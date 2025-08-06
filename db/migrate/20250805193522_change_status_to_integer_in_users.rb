@@ -10,5 +10,5 @@ class ChangeStatusToIntegerInUsers < ActiveRecord::Migration[7.1]
 
   def down
     change_column :users, :status, :string
-  end 
+  end
 end
