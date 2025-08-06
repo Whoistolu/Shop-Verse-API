@@ -1,4 +1,4 @@
-class AddStatusFieldToUser < ActiveRecord::Migration[8.0]
+class AddStatusFieldToUser < ActiveRecord::Migration[7.1]
   def change
     add_column :users, :status, :integer
   end

@@ -24,7 +24,17 @@ class Api::V1::Users::CustomRegistrationsController < ApplicationController
       return
     end
 
-    user = User.new(sign_up_params.merge(user_role_id: user_role.id))
+    default_status =
+    case role_name
+    when "customer"
+      "pending_registration"
+    when "brand_owner"
+      "awaiting_approval"
+    else
+      nil
+    end
+
+    user = User.new(sign_up_params.merge(user_role_id: user_role.id, status: default_status))
 
     if user.save
         if role_name == "customer"

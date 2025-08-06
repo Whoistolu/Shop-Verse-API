@@ -1,4 +1,4 @@
-class CreateOtps < ActiveRecord::Migration[8.0]
+class CreateOtps < ActiveRecord::Migration[7.1]
   def change
     create_table :otps do |t|
       t.string :code

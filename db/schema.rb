@@ -10,9 +10,9 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_07_31_093825) do
+ActiveRecord::Schema[7.1].define(version: 2025_08_05_193522) do
   # These are extensions that must be enabled in order to support this database
-  enable_extension "pg_catalog.plpgsql"
+  enable_extension "plpgsql"
 
   create_table "brands", force: :cascade do |t|
     t.string "name"
@@ -48,14 +48,6 @@ ActiveRecord::Schema[8.0].define(version: 2025_07_31_093825) do
     t.index ["customer_id"], name: "index_delivery_addresses_on_customer_id"
   end
 
-  create_table "jwt_denylists", force: :cascade do |t|
-    t.string "jti"
-    t.datetime "exp"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["jti"], name: "index_jwt_denylists_on_jti"
-  end
-
   create_table "order_items", force: :cascade do |t|
     t.integer "quantity"
     t.decimal "unit_price"
@@ -85,6 +77,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_07_31_093825) do
     t.bigint "user_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.boolean "used", default: false
     t.index ["user_id"], name: "index_otps_on_user_id"
   end
 
@@ -121,7 +114,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_07_31_093825) do
     t.string "first_name"
     t.string "last_name"
     t.bigint "user_role_id", null: false
-    t.integer "status"
+    t.integer "status", default: 0, null: false
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
     t.index ["user_role_id"], name: "index_users_on_user_role_id"
