@@ -6,9 +6,17 @@ class Api::V1::ProductController < ApplicationController
        @products = current_user.brand.products
     end
 
-
     def create
         @product = current_user.brand.products.new(product_params)
+    end
+
+    def update
+        @product = current_user.brand.products.find(params[:id])
+        if @product.update(product_params)
+            render json: { message: "Product updated successfully" }, status: :ok
+        else
+            render json: { error: @product.errors.full_messages }, status: :unprocessable_entity
+        end
     end
 
     private
