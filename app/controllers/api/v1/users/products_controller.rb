@@ -19,6 +19,15 @@ class Api::V1::ProductController < ApplicationController
         end
     end
 
+    def destroy
+        @product = current_user.brand.products.find(params[:id])
+        if @product.destroy
+            render json: { message: "Product deleted successfully" }, status: :ok
+        else
+            render json: { error: @product.errors.full_messages }, status: :unprocessable_entity
+        end
+    end
+
     private
 
     def product_params
