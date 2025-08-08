@@ -1,7 +1,7 @@
 class Api::V1::ProductController < ApplicationController
     before_action :authenticate_user!
     before_action :ensure_brand_owner, only: [ :create, :index ]
-    before_action :set_product, only: [ :update, :destroy ]
+    before_action :set_product, only: [ :update, :destroy, :show ]
     respond_to :json
 
     def index
@@ -33,7 +33,7 @@ class Api::V1::ProductController < ApplicationController
     private
 
     def product_params
-         params.require(:product).permit(:name, :description, :price, :category_id, :brand_id, :status, :stock, :status, :image_url)
+         params.require(:product).permit(:name, :description, :price, :category_id, :status, :stock, :status, :image_url)
     end
 
     def ensure_brand_owner
@@ -43,7 +43,20 @@ class Api::V1::ProductController < ApplicationController
     end
 
     def set_product
-        @product = current_user.brand.products.find_by(id: params[:id])
-        render json: { error: "Product not found" }, status: :not_found unless @product
+        case current_user.user_role.name
+        when "brand_owner"
+            @product = current_user.brand.products.find_by(id: params[:id])
+        when "customer"
+            @product = Product
+                        .joins(:brand)
+                        .where(id: params[:id], status: "active", brands: { active: true })
+                        .first
+        when "super_admin"
+            @product = Product.find_by(id: params[:id])
+        end
+
+        unless @product
+            render json: { error: "Product not found or not accessible" }, status: :not_found
+        end
     end
 end
