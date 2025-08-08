@@ -10,8 +10,6 @@ class Api::V1::ProductController < ApplicationController
   end
 
   def create
-    return render json: { error: "Invalid category" }, status: :unprocessable_entity unless Category.exists?(params[:product][:category_id])
-
     @product = current_user.brand.products.new(product_params.except(:brand_id))
 
     if @product.save
@@ -22,8 +20,6 @@ class Api::V1::ProductController < ApplicationController
   end
 
   def update
-    return render json: { error: "Invalid category" }, status: :unprocessable_entity unless Category.exists?(params[:product][:category_id])
-
     if @product.update(product_params.except(:brand_id))
       render json: { message: "Product updated successfully", product: @product }, status: :ok
     else
