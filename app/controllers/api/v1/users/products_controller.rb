@@ -1,7 +1,7 @@
 class Api::V1::ProductController < ApplicationController
   before_action :authenticate_user!
-  before_action :ensure_brand_owner, only: [:create, :index]
-  before_action :set_product, only: [:update, :destroy, :show]
+  before_action :ensure_brand_owner, only: [ :create, :index ]
+  before_action :set_product, only: [ :update, :destroy, :show ]
   respond_to :json
 
   def index
@@ -13,7 +13,7 @@ class Api::V1::ProductController < ApplicationController
     @product = current_user.brand.products.new(product_params.except(:brand_id))
 
     if @product.save
-      render json: @product.as_json(include: { category: { only: [:id, :name] } }), status: :created
+      render json: @product.as_json(include: { category: { only: [ :id, :name ] } }), status: :created
     else
       render json: { error: @product.errors.full_messages }, status: :unprocessable_entity
     end
@@ -49,16 +49,16 @@ class Api::V1::ProductController < ApplicationController
 
   def set_product
     @product = case current_user.user_role.name
-               when "brand_owner"
+    when "brand_owner"
                  current_user.brand.products.find_by(id: params[:id])
-               when "customer"
+    when "customer"
                  Product
                    .joins(:brand)
                    .where(id: params[:id], status: "active", brands: { active: true })
                    .first
-               when "super_admin"
+    when "super_admin"
                  Product.find_by(id: params[:id])
-               end
+    end
 
     render json: { error: "Product not found or not accessible" }, status: :not_found unless @product
   end
