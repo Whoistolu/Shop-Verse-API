@@ -13,7 +13,7 @@ class Api::V1::ProductController < ApplicationController
     @product = current_user.brand.products.new(product_params.except(:brand_id))
 
     if @product.save
-      render json: @product, status: :created
+      render json: @product.as_json(include: { category: { only: [:id, :name] } }), status: :created
     else
       render json: { error: @product.errors.full_messages }, status: :unprocessable_entity
     end
