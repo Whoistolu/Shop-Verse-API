@@ -1,4 +1,8 @@
 class Api::V1::Users::CategoriesController < ApplicationController
+    before_action :authenticate_user!
+    before_action :ensure_super_admin, only: [ :create, :update, :destroy ]
+    respond_to :json
+
     def index
       @categories = Category.all
       render json: @categories, status: :ok
@@ -14,7 +18,7 @@ class Api::V1::Users::CategoriesController < ApplicationController
     end
 
     def create
-        @category = Category.new(categories_params)
+        @category = Category.new(category_params)
         if @category.save
             render json: @category, status: :created
         else
@@ -24,7 +28,7 @@ class Api::V1::Users::CategoriesController < ApplicationController
 
     def update
         @category = Category.find_by(id: params[:id])
-        if @category.update(categories_params)
+        if @category.update(category_params)
             render json: @category, status: :ok
         else
             render json: { error: @category.errors.full_messages }, status: :unprocessable_entity
@@ -39,12 +43,16 @@ class Api::V1::Users::CategoriesController < ApplicationController
             render json: { error: "Category not found or could not be deleted" }, status: :not_found
         end
     end
-    
-
 
     private
 
     def category_params
       params.require(:category).permit(:name)
+    end
+
+    def ensure_super_admin
+        unless current_user.user_role.name == "super_admin"
+            render json: { error: "You are not authorized to perform this action" }, status: :forbidden
+        end
     end
 end
