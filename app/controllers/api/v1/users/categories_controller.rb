@@ -1,5 +1,7 @@
 class Api::V1::Users::CategoriesController < ApplicationController
     before_action :authenticate_user!
+    before_action :set_categroy, only: [ :show, :update, :destroy ]
+    skip_before_action :authenticate_user!, only: [ :index ]
     before_action :ensure_super_admin, only: [ :create, :update, :destroy ]
     respond_to :json
 
@@ -9,7 +11,6 @@ class Api::V1::Users::CategoriesController < ApplicationController
     end
 
     def show
-        @category = Category.find_by(id: params[:id])
         if @category
             render json: @category, status: :ok
         else
@@ -27,7 +28,6 @@ class Api::V1::Users::CategoriesController < ApplicationController
     end
 
     def update
-        @category = Category.find_by(id: params[:id])
         if @category.update(category_params)
             render json: @category, status: :ok
         else
@@ -36,7 +36,6 @@ class Api::V1::Users::CategoriesController < ApplicationController
     end
 
     def destroy
-        @category = Category.find_by(id: params[:id])
         if @category&.destroy
             render json: { message: "Category deleted successfully" }, status: :ok
         else
@@ -54,5 +53,12 @@ class Api::V1::Users::CategoriesController < ApplicationController
         unless current_user.user_role.name == "super_admin"
             render json: { error: "You are not authorized to perform this action" }, status: :forbidden
         end
+    end
+
+    def set_categroy
+        @category = Category.find_by(id: params[:id])
+        unless @category
+            render json: { error: "Category not found" }, status: :not_found
+        end 
     end
 end
