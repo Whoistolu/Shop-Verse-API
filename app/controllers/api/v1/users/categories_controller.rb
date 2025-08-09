@@ -1,8 +1,8 @@
 class Api::V1::Users::CategoriesController < ApplicationController
-    before_action :authenticate_user!
-    before_action :set_categroy, only: [ :show, :update, :destroy ]
     skip_before_action :authenticate_user!, only: [ :index ]
+    before_action :authenticate_user!, except: [ :index ]
     before_action :ensure_super_admin, only: [ :create, :update, :destroy ]
+    before_action :set_category, only: [ :show, :update, :destroy ]
     respond_to :json
 
     def index
@@ -11,11 +11,7 @@ class Api::V1::Users::CategoriesController < ApplicationController
     end
 
     def show
-        if @category
-            render json: @category, status: :ok
-        else
-            render json: { error: "Category not found" }, status: :not_found
-        end
+        render json: @category, status: :ok
     end
 
     def create
@@ -36,10 +32,10 @@ class Api::V1::Users::CategoriesController < ApplicationController
     end
 
     def destroy
-        if @category&.destroy
+        if @category.destroy
             render json: { message: "Category deleted successfully" }, status: :ok
         else
-            render json: { error: "Category not found or could not be deleted" }, status: :not_found
+            render json: { error: "Category could not be deleted" }, status: :unprocessable_entity
         end
     end
 
@@ -55,10 +51,8 @@ class Api::V1::Users::CategoriesController < ApplicationController
         end
     end
 
-    def set_categroy
+    def set_category
         @category = Category.find_by(id: params[:id])
-        unless @category
-            render json: { error: "Category not found" }, status: :not_found
-        end 
+        render json: { error: "Category not found" }, status: :not_found unless @category
     end
 end
