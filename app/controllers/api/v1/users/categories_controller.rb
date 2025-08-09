@@ -13,6 +13,17 @@ class Api::V1::Users::CategoriesController < ApplicationController
         end
     end
 
+    def create
+        @category = Category.new(categories_params)
+        if @category.save
+            render json: @category, status: :created
+        else
+            render json: { error: @category.errors.full_messages }, status: :unprocessable_entity
+        end
+    end
+
+
+
     private
 
     def category_params
