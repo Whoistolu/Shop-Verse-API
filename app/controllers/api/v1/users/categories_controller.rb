@@ -31,6 +31,16 @@ class Api::V1::Users::CategoriesController < ApplicationController
         end
     end
 
+    def destroy
+        @category = Category.find_by(id: params[:id])
+        if @category&.destroy
+            render json: { message: "Category deleted successfully" }, status: :ok
+        else
+            render json: { error: "Category not found or could not be deleted" }, status: :not_found
+        end
+    end
+    
+
 
     private
 
