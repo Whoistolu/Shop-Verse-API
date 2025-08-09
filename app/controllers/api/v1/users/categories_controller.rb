@@ -22,6 +22,14 @@ class Api::V1::Users::CategoriesController < ApplicationController
         end
     end
 
+    def update
+        @category = Category.find_by(id: params[:id])
+        if @category.update(categories_params)
+            render json: @category, status: :ok
+        else
+            render json: { error: @category.errors.full_messages }, status: :unprocessable_entity
+        end
+    end
 
 
     private
