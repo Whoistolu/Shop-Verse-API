@@ -1,4 +1,4 @@
-class Api::V1::Users::CategoriesController < ApplicationController
+class Api::V1::SuperAdmin::CategoriesController < ApplicationController
     skip_before_action :authenticate_user!, only: [ :index ]
     before_action :authenticate_user!, except: [ :index ]
     before_action :ensure_super_admin, only: [ :create, :update, :destroy ]

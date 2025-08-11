@@ -16,6 +16,18 @@ Rails.application.routes.draw do
 
       post "auth/verify_otp", to: "users/otp_verification#verify_otp"
       post "auth/resend_otp", to: "users/otp_resend#resend"
+
+      namespace :super_admin do
+        resources :users, only: [ :index, :show ] do
+          member do
+            patch :update_status
+          end
+          collection do
+            get :metrics
+          end
+        end
+        resources :brands, only: [ :index ]
+      end
     end
   end
 
