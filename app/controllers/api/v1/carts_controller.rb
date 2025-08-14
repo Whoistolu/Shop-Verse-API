@@ -11,4 +11,10 @@ class Api::V1::CartsController < ApplicationController
         cart.add_product(product, params[:quantity] || 1)
         render json: cart, include: :cart_items
     end
+
+    def remove_item
+        cart = current_user.cart
+        cart.remove_product(params[:product_id])
+        render json: cart, include: :cart_items
+    end
 end
