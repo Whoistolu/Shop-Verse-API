@@ -15,7 +15,7 @@ class User < ApplicationRecord
     user_role.name == "brand_owner"
   end
 
-  def own_brand
+  def owned_brand
       raise "Not a brand owner" unless brand_owner?
       brand
   end
