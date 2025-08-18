@@ -11,6 +11,15 @@ class User < ApplicationRecord
 
   validates :email, :first_name, :last_name, presence: true
 
+  def brand_owner?
+    user_role.name == "brand_owner"
+  end
+
+  def own_brand
+      raise "Not a brand owner" unless brand_owner?
+      brand
+  end
+
   enum status: {
     pending_registration: 0,
     registered: 1,
