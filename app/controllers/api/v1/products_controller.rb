@@ -29,4 +29,10 @@ class Api::V1::ProductController < ApplicationController
   def category_must_be_global
     raise "is invalid" unless Category.exists?(id: category_id)
   end
+
+  def set_product
+    @product = current_user.owned_brand.products.find(params[:id])
+  rescue ActiveRecord::RecordNotFound
+    render json: { error: "Product not found or not owned by your brand" }, status: :not_found
+  end
 end
