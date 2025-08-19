@@ -14,6 +14,14 @@ class Api::V1::ProductController < ApplicationController
     end
   end
 
+  def update_stock
+    if @product.update(stock_params)
+      render json: { message: "Stock updated successfully", product: @product }, status: :ok
+    else
+      render json: { errors: @product.errors.full_messages }, status: :unprocessable_entity
+    end
+  end
+
   private
 
   def authorize_brand_owner!
