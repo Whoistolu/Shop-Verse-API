@@ -1,4 +1,4 @@
-class Api::V1::ProductController < ApplicationController
+class Api::V1::ProductsController < ApplicationController
   before_action :authenticate_user!
   before_action :authorize_brand_owner!
   before_action :set_product, only: [:update_stock]
