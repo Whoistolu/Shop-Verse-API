@@ -19,6 +19,6 @@ class Api::V1::OrdersController < ApplicationController
     private
 
     def order_params
-        params.require(:order).permit(:shipping_address, :payment_method, order_items_attributes: [:product_id, :quantity])
+        params.require(:order).permit(:shipping_address, :payment_method, order_items_attributes: [ :product_id, :quantity ])
     end
 end

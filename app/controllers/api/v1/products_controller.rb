@@ -1,8 +1,8 @@
 class Api::V1::ProductsController < ApplicationController
   before_action :authenticate_user!
   before_action :authorize_brand_owner!
-  before_action :set_product, only: [:update_stock]
-  
+  before_action :set_product, only: [ :update_stock ]
+
 
   def create
     product = current_user.owned_brand.products.new(product_params)
@@ -34,7 +34,7 @@ class Api::V1::ProductsController < ApplicationController
     params.require(:product).permit(:name, :description, :price, :stock, :status, :image_url, :category_id)
   end
 
-  
+
 
   def set_product
     @product = current_user.owned_brand.products.find(params[:id])

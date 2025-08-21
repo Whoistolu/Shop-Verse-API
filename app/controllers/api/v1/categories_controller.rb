@@ -9,5 +9,3 @@ class Api::V1::CategoriesController < ApplicationController
         render json: category, include: :products
     end
 end
-
-
