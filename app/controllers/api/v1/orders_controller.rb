@@ -12,6 +12,18 @@ class Api::V1::OrdersController < ApplicationController
         })
     end
 
+    def update_item_status
+        order_item = OrderItem.joins(:product)
+                            .where(products: { brand_id: current_user.owned_brand.id })
+                            .find(params[:id])
+
+        if order_item.update(status: params[:status])
+        render json: { message: "Order item updated successfully", order: order_item.order }, status: :ok
+        else
+        render json: { errors: order_item.errors.full_messages }, status: :unprocessable_entity
+        end
+    end
+
      def show
         order = current_user.orders.find(params[:id])
         render json: order
