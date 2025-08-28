@@ -9,7 +9,7 @@ class Api::V1::OrdersController < ApplicationController
 
         render json: orders.as_json(include: {
         order_items: { include: :product },
-        customer: { only: [:id, :email] }
+        customer: { only: [ :id, :email ] }
         })
     end
 
@@ -31,4 +31,3 @@ class Api::V1::OrdersController < ApplicationController
         render json: { error: "Unauthorized" }, status: :unauthorized unless current_user.has_role?(:brand_owner)
     end
 end
-
