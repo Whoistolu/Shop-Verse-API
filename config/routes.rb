@@ -61,14 +61,10 @@ Rails.application.routes.draw do
        # Customer Routes
       namespace :customer do
         resources :orders do
-          collection do
-            get :history
-          end
         end
-        resources :cart_items
+
         resource :profile, only: [:show, :update]
         resources :addresses
-        get 'wishlist', to: 'wishlist#index'
       end
 
       
