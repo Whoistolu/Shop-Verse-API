@@ -28,46 +28,6 @@ Rails.application.routes.draw do
         end
         resources :brands, only: [ :index ]
       end
-
-       # Product Management
-      resources :products do
-        collection do
-          get :search
-          get :featured
-        end
-        resources :reviews, only: [:index, :create, :update, :destroy]
-      end
-
-      # Categories
-      resources :categories, only: [:index, :show]
-
-      # Brand Owner Routes
-      namespace :brand do
-        resources :products
-        resources :orders, only: [:index, :show] do
-          member do
-            patch :update_item_status
-          end
-        end
-        resource :profile, only: [:show, :update]
-        resources :analytics, only: [:index] do
-          collection do
-            get :sales
-            get :inventory
-          end
-        end
-      end
-
-       # Customer Routes
-      namespace :customer do
-        resources :orders do
-        end
-
-        resource :profile, only: [:show, :update]
-        resources :addresses
-      end
-
-      
     end
   end
 
