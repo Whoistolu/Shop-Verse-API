@@ -28,6 +28,16 @@ Rails.application.routes.draw do
         end
         resources :brands, only: [ :index ]
       end
+
+       # Product Management
+      resources :products do
+        collection do
+          get :search
+          get :featured
+        end
+        resources :reviews, only: [:index, :create, :update, :destroy]
+      end
+
     end
   end
 
