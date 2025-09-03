@@ -34,14 +34,6 @@ class Api::V1::ProductsController < ApplicationController
     params.require(:product).permit(:name, :description, :price, :stock, :status, :image_url, :category_id)
   end
 
-
-
-  def set_product
-    @product = current_user.owned_brand.products.find(params[:id])
-  rescue ActiveRecord::RecordNotFound
-    render json: { error: "Product not found or not owned by your brand" }, status: :not_found
-  end
-
   def stock_params
     params.require(:product).permit(:stock)
   end
