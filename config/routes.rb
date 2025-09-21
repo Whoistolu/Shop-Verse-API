@@ -71,12 +71,6 @@ Rails.application.routes.draw do
           end
         end
         resources :brands, only: [:index]
-        resources :impersonation, only: [] do
-          collection do
-            post :impersonate
-            delete :stop_impersonation
-          end
-        end
       end
     end
   end
