@@ -18,12 +18,12 @@ Rails.application.routes.draw do
       post "auth/resend_otp", to: "users/otp_resend#resend"
 
       # Public product browsing
-      resources :products, only: [:index, :show]
-      resources :categories, only: [:index, :show]
-      resources :brands, only: [:index, :show]
+      resources :products, only: [ :index, :show ]
+      resources :categories, only: [ :index, :show ]
+      resources :brands, only: [ :index, :show ]
 
       # Customer cart management
-      resources :carts, only: [:show] do
+      resources :carts, only: [ :show ] do
         collection do
           post :add_item
           patch :update_item
@@ -33,14 +33,14 @@ Rails.application.routes.draw do
       end
 
       # Customer orders
-      resources :orders, only: [:index, :show, :create] do
+      resources :orders, only: [ :index, :show, :create ] do
         member do
           patch :update_status
         end
       end
 
       # Brand owner product management
-      resources :products, only: [:create, :update, :destroy] do
+      resources :products, only: [ :create, :update, :destroy ] do
         collection do
           get :brand_products
         end
@@ -62,7 +62,7 @@ Rails.application.routes.draw do
       end
 
       namespace :super_admin do
-        resources :users, only: [:index, :show] do
+        resources :users, only: [ :index, :show ] do
           member do
             patch :update_status
           end
@@ -70,7 +70,7 @@ Rails.application.routes.draw do
             get :metrics
           end
         end
-        resources :brands, only: [:index]
+        resources :brands, only: [ :index ]
       end
     end
   end

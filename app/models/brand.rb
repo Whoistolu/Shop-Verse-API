@@ -15,8 +15,8 @@ class Brand < ApplicationRecord
 
   def top_selling_products(limit = 5)
     products.joins(:order_items)
-            .group('products.id')
-            .order('SUM(order_items.quantity) DESC')
+            .group("products.id")
+            .order("SUM(order_items.quantity) DESC")
             .limit(limit)
   end
 

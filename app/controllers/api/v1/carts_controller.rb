@@ -5,7 +5,7 @@ class Api::V1::CartsController < ApplicationController
   def show
     cart_items = get_cart_items
     total = calculate_cart_total(cart_items)
-    
+
     render json: {
       items: cart_items,
       total: total,
@@ -16,12 +16,12 @@ class Api::V1::CartsController < ApplicationController
   def add_item
     product = Product.published.find(params[:product_id])
     quantity = params[:quantity].to_i
-    
+
     if quantity <= 0
       render json: { error: "Quantity must be greater than 0" }, status: :unprocessable_entity
       return
     end
-    
+
     if quantity > product.stock
       render json: { error: "Not enough stock available" }, status: :unprocessable_entity
       return
@@ -29,16 +29,16 @@ class Api::V1::CartsController < ApplicationController
 
     cart = session[:cart] || {}
     cart_key = product.id.to_s
-    
+
     if cart[cart_key]
       cart[cart_key] += quantity
     else
       cart[cart_key] = quantity
     end
-    
+
     session[:cart] = cart
-    
-    render json: { 
+
+    render json: {
       message: "Item added to cart successfully",
       cart: get_cart_summary
     }, status: :ok
@@ -47,15 +47,15 @@ class Api::V1::CartsController < ApplicationController
   def update_item
     product = Product.published.find(params[:product_id])
     quantity = params[:quantity].to_i
-    
+
     if quantity < 0
       render json: { error: "Quantity cannot be negative" }, status: :unprocessable_entity
       return
     end
-    
+
     cart = session[:cart] || {}
     cart_key = product.id.to_s
-    
+
     if quantity == 0
       cart.delete(cart_key)
     else
@@ -65,10 +65,10 @@ class Api::V1::CartsController < ApplicationController
       end
       cart[cart_key] = quantity
     end
-    
+
     session[:cart] = cart
-    
-    render json: { 
+
+    render json: {
       message: "Cart updated successfully",
       cart: get_cart_summary
     }, status: :ok
@@ -79,8 +79,8 @@ class Api::V1::CartsController < ApplicationController
     cart = session[:cart] || {}
     cart.delete(product.id.to_s)
     session[:cart] = cart
-    
-    render json: { 
+
+    render json: {
       message: "Item removed from cart successfully",
       cart: get_cart_summary
     }, status: :ok
@@ -102,12 +102,12 @@ class Api::V1::CartsController < ApplicationController
   def get_cart_items
     cart = session[:cart] || {}
     product_ids = cart.keys.map(&:to_i)
-    
+
     products = Product.published.where(id: product_ids).includes(:brand, :category)
-    
+
     products.map do |product|
       {
-        product: product.as_json(include: [:brand, :category]),
+        product: product.as_json(include: [ :brand, :category ]),
         quantity: cart[product.id.to_s].to_i,
         subtotal: product.price * cart[product.id.to_s].to_i
       }
