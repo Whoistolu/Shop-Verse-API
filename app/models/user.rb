@@ -8,6 +8,9 @@ class User < ApplicationRecord
 
   belongs_to :user_role
   has_many :otps, dependent: :destroy
+  has_one :brand, dependent: :destroy
+  has_one :customer, dependent: :destroy
+  has_many :orders, through: :customer
 
   validates :email, :first_name, :last_name, presence: true
 
@@ -15,9 +18,26 @@ class User < ApplicationRecord
     user_role.name == "brand_owner"
   end
 
+  def customer?
+    user_role.name == "customer"
+  end
+
+  def super_admin?
+    user_role.name == "super_admin"
+  end
+
+  def has_role?(role_name)
+    user_role.name == role_name.to_s
+  end
+
   def owned_brand
       raise "Not a brand owner" unless brand_owner?
       brand
+  end
+
+  def customer_profile
+    raise "Not a customer" unless customer?
+    customer
   end
 
   enum status: {
