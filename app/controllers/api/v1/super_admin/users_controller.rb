@@ -33,7 +33,7 @@ class Api::V1::SuperAdmin::UsersController < ApplicationController
     def metrics
         total_brands    = User.joins(:user_role).where(user_roles: { name: "brand_owner" }).count
         total_customers = User.joins(:user_role).where(user_roles: { name: "customer" }).count
-        # total_orders    = Order.count
+        total_orders    = Order.count
 
         render json: {
             brands: total_brands,
