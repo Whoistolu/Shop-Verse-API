@@ -17,8 +17,52 @@ Rails.application.routes.draw do
       post "auth/verify_otp", to: "users/otp_verification#verify_otp"
       post "auth/resend_otp", to: "users/otp_resend#resend"
 
+      # Public product browsing
+      resources :products, only: [:index, :show]
+      resources :categories, only: [:index, :show]
+      resources :brands, only: [:index, :show]
+
+      # Customer cart management
+      resources :carts, only: [:show] do
+        collection do
+          post :add_item
+          patch :update_item
+          delete :remove_item
+          delete :clear
+        end
+      end
+
+      # Customer orders
+      resources :orders, only: [:index, :show, :create] do
+        member do
+          patch :update_status
+        end
+      end
+
+      # Brand owner product management
+      resources :products, only: [:create, :update, :destroy] do
+        collection do
+          get :brand_products
+        end
+        member do
+          patch :update_stock
+          patch :update_status
+        end
+      end
+
+      # Brand owner dashboard and order management
+      resources :brands, only: [] do
+        collection do
+          get :dashboard
+          get :orders
+        end
+        member do
+          patch :update_order_status
+        end
+      end
+
       namespace :super_admin do
-        resources :users, only: [ :index, :show ] do
+        resources :users, only: [:index, :show] do
           member do
             patch :update_status
           end
@@ -26,7 +70,13 @@ Rails.application.routes.draw do
             get :metrics
           end
         end
-        resources :brands, only: [ :index ]
+        resources :brands, only: [:index]
+        resources :impersonation, only: [] do
+          collection do
+            post :impersonate
+            delete :stop_impersonation
+          end
+        end
       end
     end
   end
