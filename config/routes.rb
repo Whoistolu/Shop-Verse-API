@@ -6,7 +6,8 @@ Rails.application.routes.draw do
         controllers: {
           sessions: "api/v1/users/sessions"
         },
-        defaults: { format: :json }
+        defaults: { format: :json },
+        skip: [:sessions]
 
       post "auth/brand_signup", to: "users/custom_registrations#brand_signup"
       post "auth/customer_signup", to: "users/custom_registrations#customer_signup"
@@ -20,6 +21,12 @@ Rails.application.routes.draw do
       # Public product browsing
       resources :products, only: [ :index, :show ]
       resources :categories, only: [ :index, :show ]
+      
+      # Brand owner dashboard and order management (must come before brands resources)
+      get 'brands/dashboard', to: 'brands#dashboard'
+      get 'brands/orders', to: 'brands#orders'
+      patch 'brands/:id/update_order_status', to: 'brands#update_order_status'
+      
       resources :brands, only: [ :index, :show ]
 
       # Customer cart management
@@ -50,16 +57,6 @@ Rails.application.routes.draw do
         end
       end
 
-      # Brand owner dashboard and order management
-      resources :brands, only: [] do
-        collection do
-          get :dashboard
-          get :orders
-        end
-        member do
-          patch :update_order_status
-        end
-      end
 
       namespace :super_admin do
         resources :users, only: [ :index, :show ] do
