@@ -1,6 +1,5 @@
 class Api::V1::Users::CustomSessionsController < ApplicationController
   respond_to :json
-  skip_before_action :authenticate_user!, only: [ :brand_login, :customer_login ]
 
   def brand_login
     handle_login("brand_owner", "Login successful")

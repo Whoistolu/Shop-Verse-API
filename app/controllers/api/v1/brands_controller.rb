@@ -1,6 +1,6 @@
 class Api::V1::BrandsController < ApplicationController
-  before_action :authenticate_user!
-  before_action :authorize_brand_owner!, only: [ :dashboard, :orders, :update_order_status ]
+  before_action :authenticate_user!, only: [ :dashboard, :orders, :update_order_status ]
+  # before_action :authorize_brand_owner!, only: [ :dashboard, :orders, :update_order_status ]
 
   # Public endpoint for customers to view brands
   def index
