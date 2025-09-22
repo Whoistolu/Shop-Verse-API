@@ -1,5 +1,5 @@
 class Api::V1::ProductsController < ApplicationController
-  before_action :authenticate_user!, except: [:index, :show]
+  before_action :authenticate_user!, except: [ :index, :show ]
   before_action :set_product, only: [ :show, :update, :destroy, :update_stock, :update_status ]
 
   # Public endpoints for customers

@@ -308,7 +308,7 @@ Devise.setup do |config|
       [ "POST", %r{^/api/v1/auth/customer_login$} ]
     ]
     # Ensure requests are treated as JSON for JWT auth
-    jwt.request_formats = { user: [:json] }
+    jwt.request_formats = { user: [ :json ] }
   end
 
   # ==> Hotwire/Turbo configuration
