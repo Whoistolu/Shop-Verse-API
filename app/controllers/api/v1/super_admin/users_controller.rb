@@ -5,9 +5,12 @@ class Api::V1::SuperAdmin::UsersController < ApplicationController
 
     def index
         roles = params[:role].present? ? [ params[:role] ] : [ "customer", "brand_owner" ]
+        statuses = params[:status].present? ? [ params[:status] ] : nil
 
         users = User.includes(:user_role)
                     .where(user_roles: { name: roles })
+
+        users = users.where(status: statuses) if statuses.present?
 
         render json: users, status: :ok
     end
