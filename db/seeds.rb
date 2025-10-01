@@ -36,3 +36,17 @@ categories = [
 categories.each do |category|
   Category.find_or_create_by(name: category[:name])
 end
+
+super_admin_role = UserRole.find_by(name: "super_admin")
+if super_admin_role && !User.exists?(email: "admin@shopverse.com")
+  User.create!(
+    email: "admin@shopverse.com",
+    password: "password123",
+    password_confirmation: "password123",
+    first_name: "Super",
+    last_name: "Admin",
+    user_role: super_admin_role,
+    status: :approved
+  )
+  puts "Super admin user created: admin@shopverse.com / password123"
+end
