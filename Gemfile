@@ -65,7 +65,7 @@ group :development, :test do
   gem "annotate"
 
   # RSpec for Rails 5+
-  gem "rspec-rails", "7.0.1"
+  gem "rspec-rails", "7.1.1"
 
   # A library for setting up Ruby objects as test data.
   gem "factory_bot_rails"
