@@ -14,6 +14,7 @@ Rails.application.routes.draw do
 
       post "auth/brand_login", to: "users/custom_sessions#brand_login"
       post "auth/customer_login", to: "users/custom_sessions#customer_login"
+      post "auth/super_admin_login", to: "users/custom_sessions#super_admin_login"
 
       post "auth/verify_otp", to: "users/otp_verification#verify_otp"
       post "auth/resend_otp", to: "users/otp_resend#resend"
