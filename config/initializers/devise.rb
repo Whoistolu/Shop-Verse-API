@@ -305,7 +305,8 @@ Devise.setup do |config|
       [ "POST", %r{^/api/v1/auth/brand_signup$} ],
       [ "POST", %r{^/api/v1/auth/customer_signup$} ],
       [ "POST", %r{^/api/v1/auth/brand_login$} ],
-      [ "POST", %r{^/api/v1/auth/customer_login$} ]
+      [ "POST", %r{^/api/v1/auth/customer_login$} ],
+      [ "POST", %r{^/api/v1/auth/super_admin_login$} ]
     ]
     # Ensure requests are treated as JSON for JWT auth
     jwt.request_formats = { user: [ :json ] }

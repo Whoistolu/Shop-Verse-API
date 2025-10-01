@@ -1,6 +1,7 @@
 class Api::V1::Users::CustomRegistrationsController < ApplicationController
   respond_to :json
-  skip_before_action :authenticate_user!, only: [ :brand_signup, :customer_signup ]
+  # In API-only mode we don't have a global authenticate before_action, so don't raise if missing
+  skip_before_action :authenticate_user!, only: [ :brand_signup, :customer_signup ], raise: false
 
   def brand_signup
     handle_signup("brand_owner", "Brand Owner Registration successful")
