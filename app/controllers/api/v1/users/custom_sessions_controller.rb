@@ -1,12 +1,18 @@
 class Api::V1::Users::CustomSessionsController < ApplicationController
   respond_to :json
 
+  skip_before_action :authenticate_user!, only: [:brand_login, :customer_login, :super_admin_login]
+
   def brand_login
     handle_login("brand_owner", "Login successful")
   end
 
   def customer_login
     handle_login("customer", "Login successful")
+  end
+
+  def super_admin_login
+    handle_login("super_admin", "Login successful")
   end
 
   private
@@ -32,6 +38,7 @@ class Api::V1::Users::CustomSessionsController < ApplicationController
     end
 
     # Check if user is approved or registered (for brand_owner or customer)
+    # Super admins are always approved
     if user.brand_owner? && user.status != "approved"
       render json: { error: "Brand owner account not approved yet" }, status: :unauthorized
       return
