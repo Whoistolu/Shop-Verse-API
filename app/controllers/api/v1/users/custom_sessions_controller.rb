@@ -48,17 +48,8 @@ class Api::V1::Users::CustomSessionsController < ApplicationController
     end
 
     token = Warden::JWTAuth::UserEncoder.new.call(user, :user, nil).first
+    user.instance_variable_set(:@token, token)
 
-    render json: {
-      message: success_message,
-      user: {
-        id: user.id,
-        email: user.email,
-        first_name: user.first_name,
-        last_name: user.last_name,
-        role_id: user.user_role_id,
-        token: token
-      }
-    }, status: :ok
+    render json: UserSerializer.new(user).as_json.merge(message: success_message), status: :ok
   end
 end
