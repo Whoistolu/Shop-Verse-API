@@ -299,14 +299,16 @@ Devise.setup do |config|
   # config.omniauth_path_prefix = '/my_engine/users/auth'
 
   config.jwt do |jwt|
-    jwt.secret = Rails.application.credentials.devise[:jwt_secret_key]
+    jwt.secret = 'my_secret_key'
     jwt.dispatch_requests = [
       [ "POST", %r{^/api/v1/auth/sign_in$} ],
       [ "POST", %r{^/api/v1/auth/brand_signup$} ],
       [ "POST", %r{^/api/v1/auth/customer_signup$} ],
       [ "POST", %r{^/api/v1/auth/brand_login$} ],
       [ "POST", %r{^/api/v1/auth/customer_login$} ],
-      [ "POST", %r{^/api/v1/auth/super_admin_login$} ]
+      [ "POST", %r{^/api/v1/auth/super_admin_login$} ],
+      [ "GET", %r{^/api/v1/super_admin/users$} ],
+      [ "PATCH", %r{^/api/v1/super_admin/users/\d+/update_status$} ]
     ]
     # Ensure requests are treated as JSON for JWT auth
     jwt.request_formats = { user: [ :json ] }
