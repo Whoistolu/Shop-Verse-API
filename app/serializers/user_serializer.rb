@@ -1,5 +1,5 @@
 class UserSerializer < ActiveModel::Serializer
-  attributes :id, :email, :first_name, :last_name, :user_role_id, :role_id
+  attributes :id, :email, :first_name, :last_name, :user_role_id, :role_id, :status
 
   # Include token only when it's available (during login)
   attribute :token, if: -> { object.instance_variable_get(:@token).present? }
@@ -10,5 +10,9 @@ class UserSerializer < ActiveModel::Serializer
 
   def role_id
     object.user_role_id
+  end
+
+  def status
+    object.status
   end
 end
