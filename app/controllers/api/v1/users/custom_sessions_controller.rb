@@ -54,6 +54,6 @@ class Api::V1::Users::CustomSessionsController < ApplicationController
       user.user_role_id
     end
 
-    render json: UserSerializer.new(user).as_json.merge(message: success_message), status: :ok
+    render json: { user: UserSerializer.new(user).as_json, message: success_message }, status: :ok
   end
 end
