@@ -21,6 +21,7 @@ Shop-Verse API is a backend service for an e-commerce platform that supports mul
 ## Database Setup
 - Run migrations with `rails db:migrate`
 - Seed initial data with `rails db:seed`
+- `rails db:seed` To run the seed file
 
 ## Authentication and Authorization
 - Authentication via Devise with JWT tokens (`devise-jwt` gem)
