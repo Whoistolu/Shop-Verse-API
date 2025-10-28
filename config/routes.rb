@@ -63,9 +63,12 @@ Rails.application.routes.draw do
         resources :users, only: [ :index, :show ] do
           member do
             patch :update_status
+            patch :update_role
           end
           collection do
             get :metrics
+            get :by_role
+            get :flagged
           end
         end
         resources :brands, only: [ :index ]
