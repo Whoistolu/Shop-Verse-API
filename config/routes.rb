@@ -71,7 +71,15 @@ Rails.application.routes.draw do
             get :flagged
           end
         end
-        resources :brands, only: [ :index ]
+        resources :brands, only: [ :index, :show ] do
+          member do
+            patch :update_status
+          end
+          collection do
+            get :metrics
+            get :flagged
+          end
+        end
       end
     end
   end
