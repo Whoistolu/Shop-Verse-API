@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_10_28_214415) do
+ActiveRecord::Schema[7.1].define(version: 2025_10_28_221959) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -20,6 +20,12 @@ ActiveRecord::Schema[7.1].define(version: 2025_10_28_214415) do
     t.bigint "user_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "status", default: 0, null: false
+    t.datetime "activated_at"
+    t.datetime "deactivated_at"
+    t.integer "status_changed_by_id"
+    t.index ["activated_at"], name: "index_brands_on_activated_at"
+    t.index ["status"], name: "index_brands_on_status"
     t.index ["user_id"], name: "index_brands_on_user_id"
   end
 
@@ -127,6 +133,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_10_28_214415) do
   end
 
   add_foreign_key "brands", "users"
+  add_foreign_key "brands", "users", column: "status_changed_by_id"
   add_foreign_key "customers", "users"
   add_foreign_key "delivery_addresses", "customers"
   add_foreign_key "order_items", "orders"
