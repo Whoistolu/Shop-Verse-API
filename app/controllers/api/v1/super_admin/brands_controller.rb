@@ -1,7 +1,7 @@
 class Api::V1::SuperAdmin::BrandsController < ApplicationController
     before_action :authenticate_user!
     before_action :ensure_super_admin
-    before_action :set_brand, only: [:show, :update_status]
+    before_action :set_brand, only: [:show, :update_status, :activate, :deactivate, :suspend]
     respond_to :json
 
     def index
@@ -11,7 +11,8 @@ class Api::V1::SuperAdmin::BrandsController < ApplicationController
                      .per(20)
 
         # Filter by status if specified
-        brands = brands.joins(:user).where(users: { status: params[:status] }) if params[:status].present?
+        brands = brands.where(status: params[:brand_status]) if params[:brand_status].present?
+        brands = brands.joins(:user).where(users: { status: params[:user_status] }) if params[:user_status].present?
 
         # Search by brand name or owner email
         if params[:search].present?
@@ -133,6 +134,129 @@ class Api::V1::SuperAdmin::BrandsController < ApplicationController
         end
     end
 
+    def activate
+        begin
+            @brand.activate!(current_user)
+            
+            # Log the activation
+            Rails.logger.info "Super Admin #{current_user.email} activated brand #{@brand.name} (ID: #{@brand.id})"
+            
+            render json: { 
+                message: "Brand activated successfully", 
+                brand: brand_summary(@brand.reload),
+                status_history: @brand.status_history
+            }
+        rescue => e
+            render json: { 
+                error: "Failed to activate brand", 
+                details: e.message 
+            }, status: :unprocessable_entity
+        end
+    end
+
+    def deactivate
+        reason = params[:reason] || "Deactivated by super admin"
+        
+        begin
+            @brand.deactivate!(current_user, reason)
+            
+            # Log the deactivation
+            Rails.logger.info "Super Admin #{current_user.email} deactivated brand #{@brand.name} (ID: #{@brand.id}). Reason: #{reason}"
+            
+            render json: { 
+                message: "Brand deactivated successfully", 
+                brand: brand_summary(@brand.reload),
+                reason: reason,
+                status_history: @brand.status_history
+            }
+        rescue => e
+            render json: { 
+                error: "Failed to deactivate brand", 
+                details: e.message 
+            }, status: :unprocessable_entity
+        end
+    end
+
+    def suspend
+        reason = params[:reason] || "Suspended by super admin"
+        
+        begin
+            @brand.suspend!(current_user, reason)
+            
+            # Log the suspension
+            Rails.logger.info "Super Admin #{current_user.email} suspended brand #{@brand.name} (ID: #{@brand.id}). Reason: #{reason}"
+            
+            render json: { 
+                message: "Brand suspended successfully", 
+                brand: brand_summary(@brand.reload),
+                reason: reason,
+                status_history: @brand.status_history
+            }
+        rescue => e
+            render json: { 
+                error: "Failed to suspend brand", 
+                details: e.message 
+            }, status: :unprocessable_entity
+        end
+    end
+
+    def bulk_action
+        brand_ids = params[:brand_ids] || []
+        action = params[:action]
+        reason = params[:reason] || "Bulk action by super admin"
+
+        unless ['activate', 'deactivate', 'suspend'].include?(action)
+            return render json: { error: "Invalid bulk action" }, status: :unprocessable_entity
+        end
+
+        brands = Brand.where(id: brand_ids)
+        
+        if brands.empty?
+            return render json: { error: "No brands found" }, status: :not_found
+        end
+
+        results = { success: [], failed: [] }
+
+        brands.each do |brand|
+            begin
+                case action
+                when 'activate'
+                    brand.activate!(current_user)
+                when 'deactivate'
+                    brand.deactivate!(current_user, reason)
+                when 'suspend'
+                    brand.suspend!(current_user, reason)
+                end
+                
+                results[:success] << {
+                    id: brand.id,
+                    name: brand.name,
+                    new_status: brand.status
+                }
+            rescue => e
+                results[:failed] << {
+                    id: brand.id,
+                    name: brand.name,
+                    error: e.message
+                }
+            end
+        end
+
+        # Log bulk action
+        Rails.logger.info "Super Admin #{current_user.email} performed bulk #{action} on #{results[:success].count} brands"
+
+        render json: {
+            message: "Bulk action completed",
+            action: action,
+            results: results,
+            summary: {
+                total_processed: brand_ids.count,
+                successful: results[:success].count,
+                failed: results[:failed].count
+            }
+        }
+    end
+
     private
 
     def ensure_super_admin
@@ -159,14 +283,18 @@ class Api::V1::SuperAdmin::BrandsController < ApplicationController
             id: brand.id,
             name: brand.name,
             description: brand.description,
+            status: brand.status,
             owner_email: brand.user.email,
             owner_status: brand.user.status,
             products_count: brand.products.count,
             total_orders: brand.total_orders,
             total_sales: brand.total_sales,
             created_at: brand.created_at,
+            activated_at: brand.activated_at,
+            deactivated_at: brand.deactivated_at,
             last_activity: brand.products.maximum(:updated_at) || brand.created_at,
-            performance_rating: calculate_performance_rating(brand)
+            performance_rating: calculate_performance_rating(brand),
+            can_sell: brand.can_sell?
         }
     end
 
@@ -175,6 +303,8 @@ class Api::V1::SuperAdmin::BrandsController < ApplicationController
             id: brand.id,
             name: brand.name,
             description: brand.description,
+            status: brand.status,
+            can_sell: brand.can_sell?,
             owner: {
                 id: brand.user.id,
                 email: brand.user.email,
@@ -194,6 +324,7 @@ class Api::V1::SuperAdmin::BrandsController < ApplicationController
                 recent_orders: brand.recent_orders.pluck(:id, :total_price, :status, :created_at)
             },
             top_products: brand.top_selling_products.pluck(:name, :price),
+            status_history: brand.status_history,
             created_at: brand.created_at,
             updated_at: brand.updated_at
         }
