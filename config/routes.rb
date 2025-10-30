@@ -74,10 +74,14 @@ Rails.application.routes.draw do
         resources :brands, only: [ :index, :show ] do
           member do
             patch :update_status
+            patch :activate
+            patch :deactivate
+            patch :suspend
           end
           collection do
             get :metrics
             get :flagged
+            patch :bulk_action
           end
         end
       end
