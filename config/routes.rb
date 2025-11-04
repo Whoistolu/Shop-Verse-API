@@ -23,10 +23,19 @@ Rails.application.routes.draw do
       resources :products, only: [ :index, :show ]
       resources :categories, only: [ :index, :show ]
 
-      # Brand owner dashboard and order management (must come before brands resources)
+      # Brand owner dashboard and management
       get "brands/dashboard", to: "brands#dashboard"
       get "brands/orders", to: "brands#orders"
-      patch "brands/:id/update_order_status", to: "brands#update_order_status"
+      patch "brands/orders/:order_id/update_status", to: "brands#update_order_status"
+      
+      # Brand owner product management
+      get "brands/products", to: "brands#products"
+      post "brands/products", to: "brands#create_product"
+      patch "brands/products/:id", to: "brands#update_product"
+      delete "brands/products/:id", to: "brands#delete_product"
+      patch "brands/products/:id/stock", to: "brands#update_product_stock"
+      patch "brands/products/:id/status", to: "brands#update_product_status"
+      patch "brands/products/bulk_update", to: "brands#bulk_update_products"
 
       resources :brands, only: [ :index, :show ]
 
@@ -43,17 +52,6 @@ Rails.application.routes.draw do
       # Customer orders
       resources :orders, only: [ :index, :show, :create ] do
         member do
-          patch :update_status
-        end
-      end
-
-      # Brand owner product management
-      resources :products, only: [ :create, :update, :destroy ] do
-        collection do
-          get :brand_products
-        end
-        member do
-          patch :update_stock
           patch :update_status
         end
       end
