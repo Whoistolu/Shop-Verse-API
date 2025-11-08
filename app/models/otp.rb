@@ -1,3 +1,0 @@
-class Otp < ApplicationRecord
-  
-end

@@ -1,3 +1,0 @@
-class DeliveryAddress < ApplicationRecord
- 
-end
