@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_11_13_001136) do
+ActiveRecord::Schema[7.1].define(version: 2025_11_13_001707) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -34,6 +34,18 @@ ActiveRecord::Schema[7.1].define(version: 2025_11_13_001136) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["user_id"], name: "index_customers_on_user_id"
+  end
+
+  create_table "orders", force: :cascade do |t|
+    t.bigint "customer_id", null: false
+    t.decimal "total_price", precision: 10, scale: 2, null: false
+    t.string "status", default: "pending", null: false
+    t.string "delivery_address", null: false
+    t.string "delivery_phone_number", null: false
+    t.string "delivery_recipient_name", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["customer_id"], name: "index_orders_on_customer_id"
   end
 
   create_table "products", force: :cascade do |t|
@@ -73,6 +85,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_11_13_001136) do
 
   add_foreign_key "brands", "users"
   add_foreign_key "customers", "users"
+  add_foreign_key "orders", "customers"
   add_foreign_key "products", "brands"
   add_foreign_key "products", "categories"
   add_foreign_key "users", "user_roles"
