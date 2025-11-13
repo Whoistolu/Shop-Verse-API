@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_11_13_000654) do
+ActiveRecord::Schema[7.1].define(version: 2025_11_13_001136) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -36,6 +36,21 @@ ActiveRecord::Schema[7.1].define(version: 2025_11_13_000654) do
     t.index ["user_id"], name: "index_customers_on_user_id"
   end
 
+  create_table "products", force: :cascade do |t|
+    t.string "name", null: false
+    t.text "description"
+    t.bigint "brand_id", null: false
+    t.bigint "category_id", null: false
+    t.decimal "price", precision: 10, scale: 2, null: false
+    t.integer "stock", default: 0, null: false
+    t.string "status", default: "unpublished", null: false
+    t.string "image_url"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["brand_id"], name: "index_products_on_brand_id"
+    t.index ["category_id"], name: "index_products_on_category_id"
+  end
+
   create_table "user_roles", force: :cascade do |t|
     t.string "name", null: false
     t.text "description"
@@ -58,5 +73,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_11_13_000654) do
 
   add_foreign_key "brands", "users"
   add_foreign_key "customers", "users"
+  add_foreign_key "products", "brands"
+  add_foreign_key "products", "categories"
   add_foreign_key "users", "user_roles"
 end
