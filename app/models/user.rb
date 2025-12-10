@@ -1,5 +1,7 @@
 class User < ApplicationRecord
   belongs_to :user_role
+  has_many :delivery_addresses
+  has_many :orders
   has_secure_password
 
   enum status: { pending: "pending", active: "active", inactive: "inactive" }
