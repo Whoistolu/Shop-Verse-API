@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_12_10_022724) do
+ActiveRecord::Schema[7.1].define(version: 2025_12_10_025559) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -29,11 +29,14 @@ ActiveRecord::Schema[7.1].define(version: 2025_12_10_022724) do
     t.datetime "updated_at", null: false
   end
 
-  create_table "customers", force: :cascade do |t|
-    t.bigint "user_id", null: false
+  create_table "delivery_addresses", force: :cascade do |t|
+    t.string "first_name"
+    t.string "last_name"
+    t.string "phone_number"
+    t.text "description"
+    t.boolean "is_default"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["user_id"], name: "index_customers_on_user_id"
   end
 
   create_table "order_items", force: :cascade do |t|
@@ -49,7 +52,6 @@ ActiveRecord::Schema[7.1].define(version: 2025_12_10_022724) do
   end
 
   create_table "orders", force: :cascade do |t|
-    t.bigint "customer_id", null: false
     t.decimal "total_price", precision: 10, scale: 2, null: false
     t.string "status", default: "pending", null: false
     t.string "delivery_address", null: false
@@ -57,7 +59,6 @@ ActiveRecord::Schema[7.1].define(version: 2025_12_10_022724) do
     t.string "delivery_recipient_name", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["customer_id"], name: "index_orders_on_customer_id"
   end
 
   create_table "products", force: :cascade do |t|
@@ -96,10 +97,8 @@ ActiveRecord::Schema[7.1].define(version: 2025_12_10_022724) do
   end
 
   add_foreign_key "brands", "users"
-  add_foreign_key "customers", "users"
   add_foreign_key "order_items", "orders"
   add_foreign_key "order_items", "products"
-  add_foreign_key "orders", "customers"
   add_foreign_key "products", "brands"
   add_foreign_key "products", "categories"
   add_foreign_key "users", "user_roles"
